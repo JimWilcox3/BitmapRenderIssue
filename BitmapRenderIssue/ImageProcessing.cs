@@ -1,4 +1,5 @@
 ﻿using Android.Graphics;
+using Android.Views;
 
 namespace BitmapRenderIssue
 {

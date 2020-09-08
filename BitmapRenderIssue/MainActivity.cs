@@ -2,13 +2,16 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Provider;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using Java.Interop;
 using System;
+using static Android.Graphics.ImageDecoder;
 
 namespace BitmapRenderIssue
 {
@@ -107,7 +110,8 @@ namespace BitmapRenderIssue
                 Android.Util.Log.Info("CameraScanning", "Getting Picture");
 
                 var src = ImageDecoder.CreateSource(ContentResolver, ImageUri);
-                Bitmap img = ImageDecoder.DecodeBitmap(src);
+
+                Bitmap img = ImageDecoder.DecodeBitmap(src, new OnHeaderDecodedListener());
 
                 CurrImage = ImageProcessing.Grayscale_ColorMatrixColorFilter(img);
 
@@ -123,5 +127,14 @@ namespace BitmapRenderIssue
             }
         }
 
+        private class OnHeaderDecodedListener : Java.Lang.Object, IOnHeaderDecodedListener
+        {
+
+            public void OnHeaderDecoded(ImageDecoder decoder, ImageInfo info, Source source)
+            {
+                decoder.MutableRequired = true;
+            }
+
+        }
     }
 }
